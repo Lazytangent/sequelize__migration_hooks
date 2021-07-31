@@ -1,20 +1,42 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const { ValidationError } = require('sequelize');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const routes = require('./routes');
 
-var app = express();
+const app = express();
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(routes);
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use((req, res, next) => {
+  const err = new Error('Resource Not Found');
+  err.title = 'Resource Not Found';
+  err.errors = ['Resource Not Found'];
+  err.status = 404;
+  next(err);
+});
+
+app.use((err, req, res, next) => {
+  if (err instanceof ValidationError) {
+    err.errors = err.errors.map((e) => e.message);
+    err.title = 'Validation Error';
+  }
+  next(err);
+});
+
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  console.err(err);
+  res.json({
+    title: err.title || 'Server Error',
+    message: err.message,
+    errors: err.errors,
+    stack: err.stack,
+  });
+});
 
 module.exports = app;
