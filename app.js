@@ -12,7 +12,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(routes);
 
-app.use((req, res, next) => {
+app.use((_req, _res, next) => {
   const err = new Error('Resource Not Found');
   err.title = 'Resource Not Found';
   err.errors = ['Resource Not Found'];
@@ -20,7 +20,7 @@ app.use((req, res, next) => {
   next(err);
 });
 
-app.use((err, req, res, next) => {
+app.use((err, _req, _res, next) => {
   if (err instanceof ValidationError) {
     err.errors = err.errors.map((e) => e.message);
     err.title = 'Validation Error';
@@ -28,7 +28,7 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-app.use((err, req, res, next) => {
+app.use((err, _req, res, _next) => {
   res.status(err.status || 500);
   console.err(err);
   res.json({
