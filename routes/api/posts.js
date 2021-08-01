@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const asyncHandler = require('express-async-handler');
 
-const { Post, User } = require('../../db/models');
-const { getRandomId } = require('../../utils');
+const { Post } = require('../../db/models');
+const db = require('../../db');
 
 router.get('', asyncHandler(async (_req, res) => {
   const posts = await Post.findAll();
@@ -10,9 +10,7 @@ router.get('', asyncHandler(async (_req, res) => {
 }));
 
 router.post('', asyncHandler(async (_req, res) => {
-  const users = await User.findAll();
-  const user_id = getRandomId(users);
-  await Post.create({ user_id });
+  await db.createPost();
   res.redirect('/api/posts');
 }));
 

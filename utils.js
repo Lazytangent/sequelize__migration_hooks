@@ -1,6 +1,4 @@
-const { User, Post } = require('./db/models');
-
-const getRandomId = (resources) => {
+exports.getRandomId = (resources) => {
   if (!resources.length) throw Error('No resources');
   let randomId = resources[0].id;
   for (const resource of resources) {
@@ -10,14 +8,7 @@ const getRandomId = (resources) => {
   return randomId;
 };
 
-const getRandomUserId = () => {
-  const users = await User.findAll();
-};
-
-const getRandomPostId = () => {
-
-};
-
-module.exports = {
-  getRandomId,
+exports.getRandomIdByType = async (Model) => {
+  const resources = await Model.findAll();
+  return getRandomId(resources);
 };
