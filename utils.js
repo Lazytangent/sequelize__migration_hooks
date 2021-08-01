@@ -1,3 +1,5 @@
+const { User, Post } = require('./db/models');
+
 const getRandomId = (resources) => {
   if (!resources.length) throw Error('No resources');
   let randomId = resources[0].id;
@@ -6,6 +8,14 @@ const getRandomId = (resources) => {
     randomId = randomNumber >= 50 ? resource.id : randomId;
   }
   return randomId;
+};
+
+const getRandomUserId = () => {
+  const users = await User.findAll();
+};
+
+const getRandomPostId = () => {
+
 };
 
 module.exports = {
