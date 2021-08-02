@@ -37,12 +37,6 @@ List all users with their associated posts and comments
 
 Create a new user
 
-### DELETE /api/users/:userId
-
-Delete the user with that `userId`. Will also delete the associated posts and
-comments associated to this user, and the comments associated to the posts that
-are associated to this user.
-
 ### GET /api/posts
 
 List all posts
